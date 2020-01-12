@@ -1,0 +1,55 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: development
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1 
+  template: 
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: {K8GIO_NAME}/{K8GPRJ_NAME}/development/{KREP_NAME}:{KBUILD_NUMBER}
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 60
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: development
+  labels:
+    app: nginx
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}
+
