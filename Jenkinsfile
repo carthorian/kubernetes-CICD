@@ -4,7 +4,7 @@ pipeline {
       GREP_NAME = "kubernetes-CICD"
       GIO_NAME = "gcr.io"
       GPRJ_NAME = "gcp-project-name"
-      GK8S_PJNAME = "kubenginx"
+      GK8S_PJNAME = "kubernetes-deploy"
     }
 
 
